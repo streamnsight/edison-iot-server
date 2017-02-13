@@ -105,7 +105,7 @@ http://localhost:3000/
 
 #### Dashboard
 
-Upload the dashboard file `Grafan-dashboard.json` from the repo to quickly get started with a pre-built dashboard.
+Upload the dashboard file `Grafana-dashboard.json` from the repo to quickly get started with a pre-built dashboard.
 
 
 If you want to create your own dashboard, the following will help:

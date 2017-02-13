@@ -31,10 +31,13 @@ app.set('port', port);
 
 // setup Websocket support on Express
 wsInstance = require('express-ws')(app);
-// import websocket handler
-var ws = require('../routes/ws');
+
+// import websocket handlers
+var ws_device = require('../routes/ws_device');
+var ws_web = require('../routes/ws_web');
 // Hook websocket to the /input endpoint
-app.ws('/input', ws);
+app.ws('/input', ws_device.handler);
+app.ws('/web', ws_web.handler(ws_device.clients));
 
 app.listen(port);
 

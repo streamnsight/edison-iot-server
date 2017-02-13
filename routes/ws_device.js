@@ -2,7 +2,6 @@
  * Created by emmanuel on 2/12/17.
  */
 
-var express = require('express');
 var uuid = require('uuid/v4');
 // elasticsearch client
 var elasticsearch = require('elasticsearch');
@@ -11,15 +10,24 @@ var esClient      = new elasticsearch.Client({
     log: 'info'
 });
 
-var ws = function (ws, req) {
+var clients = [];
+
+var wsExpress = function (ws, req) {
     console.log('input');
+    clients.push(ws);
+    console.log(clients.map(function(client) {
+        return client.id;
+    }));
+
     ws.on('message', function (msg) {
         try {
             var data = JSON.parse(msg);
-            console.log(data);
+            //console.log(data);
             //console.log(typeof data);
             //console.log(data.meta.timestamp);
-            var date = data['meta'].timestamp;
+            var date = data.meta.timestamp;
+            var id = data.meta.id;
+            ws.id = id;
             esClient.create({
                 index: 'iotdemo-' + date.substring(0,10), // we use the ISO timestamp to roll indices over every day with format YYYY-MM-dd = 10 characters
                 type: 'edison',
@@ -33,6 +41,21 @@ var ws = function (ws, req) {
             console.log(e.message + " " + data);
         }
     });
+
+    ws.on('close', function() {
+        // remove socket from client list
+        var index = clients.indexOf(ws);
+        if (index > -1) {
+            clients.splice(index, 1);
+        }
+    })
 };
 
-module.exports = ws;
+function getClients(){
+    return clients;
+}
+
+module.exports = {
+    handler: wsExpress,
+    clients: getClients
+};

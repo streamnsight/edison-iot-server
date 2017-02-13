@@ -1,8 +1,11 @@
 <h1>{{title}}</h1>
 <div>
-    <h1>Simple IoT Server - Santa Cruz Javascript Meetup</h1>
+    <h2>Server URL</h2>
+    <input id="url" value="" placeholder="Server URL: 192.168.20.105:3001">
+    <button id="url_button" type='button' class='btn btn-primary' onclick="updateURL()">Connect</button>
+    <div id="url_error"></div>
     <h2>Connected Devices</h2>
-    <div id="device_list">
+    <ul id="device_list">
 
-    </div>
+    </ul>
 </div>
