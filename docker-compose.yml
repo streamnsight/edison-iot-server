@@ -1,0 +1,33 @@
+version: '2'
+services:
+  elasticsearch:
+    image: elasticsearch:5.2-alpine
+    ports:
+    - "9200:9200"
+    - "9300:9300"
+    volumes:
+    - ./database/elasticsearch/data:/usr/share/elasticsearch/data
+    - ./database/elasticsearch/config:/usr/share/elasticsearch/config
+#    command:
+#    # pass some params to elasticsearch: use localhost as URL, allow CORS for all
+##    - "-Des.elastic.url=localhost"
+#    - "-Ehttp.cors.enabled=true"
+#    - "-Ehttp.cors.allow-origin=\"*\""
+  kibana:
+    image: kibana:5.2
+    ports:
+    - "5601:5601"
+#    environment:
+#    - "ELASTICSEARCH_URL=http://localhost:9200"
+    depends_on:
+    - elasticsearch
+  grafana:
+    image: grafana/grafana
+    ports:
+    - "3000:3000"
+    environment:
+    - "GF_SECURITY_ADMIN_PASSWORD=secret"
+    volumes:
+    - "./database/grafana:/var/lib/grafana"
+    depends_on:
+    - elasticsearch
