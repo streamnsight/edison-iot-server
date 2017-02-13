@@ -1,33 +1,39 @@
 version: '2'
 services:
+  # define elasticsearch service
   elasticsearch:
+    # use official image based on alpine linux
     image: elasticsearch:5.2-alpine
     ports:
+    # elasticsearch runs on port 9200, and will be mapped to localhost port 9200
     - "9200:9200"
     - "9300:9300"
     volumes:
+    # use local volume for storage (so it persists when container is shut down
     - ./database/elasticsearch/data:/usr/share/elasticsearch/data
     - ./database/elasticsearch/config:/usr/share/elasticsearch/config
-#    command:
-#    # pass some params to elasticsearch: use localhost as URL, allow CORS for all
-##    - "-Des.elastic.url=localhost"
-#    - "-Ehttp.cors.enabled=true"
-#    - "-Ehttp.cors.allow-origin=\"*\""
+  # define Kibana service
   kibana:
+    # use official Kibana 5.2 image
     image: kibana:5.2
+    # Kibana runs on port 5601 and will be mapped to localhost port 5601
     ports:
     - "5601:5601"
-#    environment:
-#    - "ELASTICSEARCH_URL=http://localhost:9200"
+    # link Kibana service to elasticsearch service
     depends_on:
     - elasticsearch
+  # define grafana service
   grafana:
+    # use official Grafana image
     image: grafana/grafana
+    # Grafana runs on port 3000 and will be mapped to localhost port 3000
     ports:
     - "3000:3000"
+    # define admin password here, through an environment variable
     environment:
     - "GF_SECURITY_ADMIN_PASSWORD=secret"
     volumes:
     - "./database/grafana:/var/lib/grafana"
+    # link Grafana service to elasticsearch service
     depends_on:
     - elasticsearch

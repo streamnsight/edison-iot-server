@@ -47,10 +47,11 @@ services:
     ports:
     # elasticsearch runs on port 9200, and will be mapped to localhost port 9200
     - "9200:9200"
+    - "9300:9300"
     volumes:
     # use local volume for storage (so it persists when container is shut down
     - ./database/elasticsearch/data:/usr/share/elasticsearch/data
-    #     - ./database/elasticsearch/config:/usr/share/elasticsearch/config
+    - ./database/elasticsearch/config:/usr/share/elasticsearch/config
   # define Kibana service
   kibana:
     # use official Kibana 5.2 image
@@ -71,6 +72,8 @@ services:
     # define admin password here, through an environment variable
     environment:
     - "GF_SECURITY_ADMIN_PASSWORD=secret"
+    volumes:
+    - "./database/grafana:/var/lib/grafana"
     # link Grafana service to elasticsearch service
     depends_on:
     - elasticsearch
@@ -99,6 +102,13 @@ http://localhost:3000/
 
 `username/password` is `admin/secret`
 
+
+#### Dashboard
+
+Upload the dashboard file `Grafan-dashboard.json` from the repo to quickly get started with a pre-built dashboard.
+
+
+If you want to create your own dashboard, the following will help:
 
 #### Template Variables
 
@@ -197,8 +207,3 @@ PUT iotdemo/_mapping/edison
 	}
 }
 ```
-
-#### Dashboard
-
-Upload the dashboard file `Grafan-dashboard.json` from the repo to quickly get started with a pre-built dashboard.
-
