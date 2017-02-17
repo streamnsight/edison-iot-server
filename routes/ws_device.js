@@ -27,6 +27,7 @@ var wsExpress = function (ws, req) {
             //console.log(data.meta.timestamp);
             var date = data.meta.timestamp;
             var id = data.meta.id;
+            // Set ID on socket for tracking
             ws.id = id;
             esClient.create({
                 index: 'iotdemo-' + date.substring(0,10), // we use the ISO timestamp to roll indices over every day with format YYYY-MM-dd = 10 characters

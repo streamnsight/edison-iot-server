@@ -30,9 +30,9 @@ https://docs.docker.com/
 
 For more info on the pre-built Docker images:
 
-https://hub.docker.com/_/elasticsearch/
-https://hub.docker.com/_/kibana/
-https://hub.docker.com/r/grafana/grafana/
+- https://hub.docker.com/_/elasticsearch/
+- https://hub.docker.com/_/kibana/
+- https://hub.docker.com/r/grafana/grafana/
 
 To run these services with docker, a `docker-compose.yml` file is provided at the root of the repo.
 It defines how services should be started and linked together.
@@ -135,7 +135,7 @@ to fix this, you need to update the mappings:
 The easiest way is to use the dev tools in Kibana
 Kibana is located at
 
-http://localhost:5601
+- http://localhost:5601
 
 ```
 PUT iotdemo/_mapping/edison
@@ -207,3 +207,12 @@ PUT iotdemo/_mapping/edison
 	}
 }
 ```
+
+## Services:
+
+If you run this locally,
+- Kibana runs on http://localhost:5601
+- Grafana runs on http://localhost:3000
+- This server runs on http://localhost:3001
+
+If you're sending your data from the IoT client project to a remote server, check with the server owner for the location of the services.
