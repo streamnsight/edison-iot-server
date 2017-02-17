@@ -5,7 +5,23 @@
 var device_list = [];
 var nb_clients = 0;
 var serverURL = "192.168.20.105:3001";
+
+WebSocket.prototype.attachListeners = function() {
+    this.onopen = onOpen;
+    this.onclose = onClose;
+    this.onmessage = onMessage;
+    this.onerror = onError;
+};
+
+WebSocket.prototype.removeAllListeners = function() {
+    this.onopen = null;
+    this.onclose = null;
+    this.onmessage = null;
+    this.onerror = null;
+};
+
 var ws = new WebSocket('ws://' + serverURL + '/web');
+ws.attachListeners();
 
 function onOpen() {
     var data = {
@@ -15,13 +31,19 @@ function onOpen() {
     $("#url_error").text("");
 }
 
-function onClose() {
-    ws = new WebSocket('ws://' + serverURL + '/web');
-    attachListeners();
+function onClose(code, reason) {
+    if (code != 1000) {
+        $("#url_error").text("Could not connect. Check the Server URL");
+    }
+    setTimeout(function(){
+        ws.removeAllListeners();
+        ws = new WebSocket('ws://' + serverURL + '/web');
+        ws.attachListeners();
+    }, 1000);
 }
 
-function onError(error) {
-    $("#url_error").text(error.message);
+function onError(e, msg) {
+    $("#url_error").text(e);
 }
 
 function onMessage(msg){
@@ -40,12 +62,6 @@ function onMessage(msg){
     }
 }
 
-function attachListeners() {
-    ws.addEventListener('open', onOpen);
-    ws.addEventListener('close', onClose);
-    ws.addEventListener('error', onError);
-    ws.addEventListener('message', onMessage);
-}
 
 function sendMessage() {
     console.log(this);
@@ -62,16 +78,14 @@ function refresh_view() {
         var device_node = genNode(device);
         $("#device_list").append(device_node)
     });
-    $("button").click(sendMessage)
+    $("button.message").click(sendMessage)
 }
 
 function genNode(device) {
-    return $.parseHTML("<li><span class='device'>"+device+"</span><input id='"+device+"' type='text' maxlength='32'><button id="+device+" type='button' class='btn btn-primary'>Send Message</button></li>");
+    return $.parseHTML("<li><span class='device'>"+device+"</span><input id='"+device+"' type='text' maxlength='32'><button id="+device+" type='button' class='btn btn-primary message'>Send Message</button></li>");
 }
 
 function updateURL() {
     serverURL = $("input[id='url']")[0].value;
     ws.close();
 }
-// on load, first time running
-attachListeners();

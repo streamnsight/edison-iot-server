@@ -1,9 +1,9 @@
 <h1>{{title}}</h1>
 <div>
     <h2>Server URL</h2>
-    <input id="url" value="" placeholder="Server URL: 192.168.20.105:3001">
-    <button id="url_button" type='button' class='btn btn-primary' onclick="updateURL()">Connect</button>
-    <div id="url_error"></div>
+    <input id="url" placeholder="Server URL: 192.168.20.105:3001" value="{{server_url}}">
+    <button id="url_button" type='button' class='btn btn-primary' onclick="updateURL()" onblur="updateURL()">Connect</button>
+    <div style="height: 2em;color: red;"><div id="url_error"></div></div>
     <h2>Connected Devices</h2>
     <ul id="device_list">
 
