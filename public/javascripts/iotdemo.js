@@ -4,7 +4,7 @@
 
 var device_list = [];
 var nb_clients = 0;
-var serverURL = "192.168.20.105:3001";
+var serverURL = window.location.host;
 
 WebSocket.prototype.attachListeners = function() {
     this.onopen = onOpen;
